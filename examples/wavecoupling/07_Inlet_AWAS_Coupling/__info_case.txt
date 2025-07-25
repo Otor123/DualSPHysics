@@ -1,0 +1,20 @@
+﻿The Inlet_AWAS_Coupling is based on the work published by Lowe et al. (2022). 
+The study employed the DualSPHysics model to investigate the hydrodynamics of plunging irregular waves on a coastal reef.
+The model was validated against experimental results from Buckley et al. (2015).
+
+Prior to this, the SWASH model had been validated against experimental data. The data from SWASH were then used to impose boundary conditions in DualSPHysics. 
+To achieve this, an inlet buffer (i.e. open boundary) was employed.
+
+The Matlab script 'lay2fix.m' converts SWASH output to create the necessary .csv files for DualSPHysics to run. 
+
+Specifically, it extracts the surface elevation from SWASH at two locations: the inlet location (creating CaseBuckley_zurf.csv and CaseBuckley_inlet.csv)
+and the location of the numerical wave gauge for the Active Wave Absorption System (AWAS) (creating CaseBuckley_awasIn.csv).
+
+The batch file w01_CaseInlet_AWAS_Coupling_SWASH_win64.bat executes SWASH (v.5.01) to extract velocity and surface elevation data at the coupling location. 
+It then runs a Matlab script to convert the data.  
+
+The batch file w02_CaseInlet_AWAS_Coupling_win64_GPU.bat (or the CPU version) executes DualSPHysics and the post-processing tools. 
+
+References:
+Lowe, R. [et al.]. Smoothed Particle Hydrodynamics simulations of reef surf zone processes driven by plunging irregular waves. "Ocean modelling", 2022. DOI: https://doi.org/10.1016/j.ocemod.2022.101945
+Buckley, M. [et al.]. Dynamics of wave setup over a steeply sloping fringing reef. "Journal of Physical Oceanography", 2015. https://doi.org/10.1175/JPO-D-15-0067.1

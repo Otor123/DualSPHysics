@@ -11,8 +11,8 @@ PROJECT(DualSPHysics)
 #------------------------------------------------------------------
 option(ENABLE_CHRONO "Enable the Chrono Engine library" ON)
 option(ENABLE_WAVEGEN "Enable the WaveGen library" ON)
-option(ENABLE_MOORDYNPLUS "Enable the MoorDynPlus library" ON)
-option(ENABLE_CUDA "Enable the use of CUDA for compilation" ON)
+option(ENABLE_MOORDYNPLUS "Enable the MoorDynPlus library" OFF)
+option(ENABLE_CUDA "Enable the use of CUDA for compilation" OFF)
 
 #------------------------------------------------------------------
 # Source files
@@ -136,7 +136,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})    
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   add_executable(DualSPHysics5.4CPU_linux64 ${OBJXML} ${OBJSPHMOTION} ${OBCOMMON} ${OBCOMMONDSPH} ${OBSPH} ${OBSPHSINGLE} ${OBWAVERZ} ${OBWAVERZGPU}  ${OBCHRONO} ${OBMOORDYNPLUS} ${OBINOUT} ${OBMESH} ${OBVRES} ${OBFLEXSTRUC})
-  add_dependencies(DualSPHysics5.4CPU_linux64 LibDSphMoorDynPlus)
+  #add_dependencies(DualSPHysics5.4CPU_linux64 LibDSphMoorDynPlus)
   install(TARGETS	DualSPHysics5.4CPU_linux64 DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
   if (CUDA_FOUND)
     cuda_add_executable(DualSPHysics5.4_linux64 ${OBJXML} ${OBJSPHMOTION} ${OBCOMMON} ${OBCOMMONDSPH} ${OBSPH} ${OBSPHSINGLE} ${OBCOMMONGPU} ${OBSPHGPU} ${OBSPHSINGLEGPU} ${OBCUDA} ${OBWAVERZ} ${OBWAVERZCUDA} ${OBCHRONO} ${OBMOORDYNPLUS} ${OBINOUT} ${OBINOUTGPU} ${OBVRESGPU} ${OBWAVERZGPU} ${OBINOUTGPU} ${OBMESH} ${OBVRES} ${OBFLEXSTRUC})

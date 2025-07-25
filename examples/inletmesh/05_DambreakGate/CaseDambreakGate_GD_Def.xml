@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<case>
+    <casedef>
+        <constantsdef>
+            <gravity x="0" y="0" z="-9.81" comment="Gravitational acceleration" units_comment="m/s^2" />
+            <rhop0 value="1000" comment="Reference density of the fluid" units_comment="kg/m^3" />
+            <rhopgradient value="2" comment="Initial density gradient 1:Rhop0, 2:Water column, 3:Max. water height (default=2)" />
+            <hswl value="0" auto="true" comment="Maximum height of still water to calculate speedofsound using coefsound" units_comment="metres (m)" />
+            <gamma value="7" comment="Polytropic constant for water used in the state equation" />
+            <speedsystem value="0" auto="true" comment="Maximum system speed (by default the dam-break propagation is used)" />
+            <coefsound value="20" comment="Coefficient to multiply speedsystem" />
+            <speedsound value="0" auto="true" comment="Speed of sound to use in the simulation (by default speedofsound=coefsound*speedsystem)" />
+            <coefh value="1.2" comment="Coefficient to calculate the smoothing length (h=coefh*sqrt(3*dp^2) in 3D)" />
+            <cflnumber value="0.2" comment="Coefficient to multiply dt" />
+        </constantsdef>
+        <mkconfig boundcount="240" fluidcount="9" />
+        <geometry>
+            <predefinition>
+                <!-- User-defined variables  -->
+                <newvarcte domainH="0.30" />
+                <newvarcte waterH="0.15" />
+                <newvarcte Dp="0.0025" />
+            </predefinition>
+            <definition dp="0.0025">
+                <pointmin x="-0.3" y="-0.3" z="-0.3" />
+                <pointmax x="1.3" y="1" z="2" />
+            </definition>
+            <commands>
+                <mainlist>
+                    <!-- solid geometry for MDBC  -->
+                    <setshapemode>actual | bound</setshapemode>
+                    <setdrawmode mode="full" />
+                    <setnormalinvert invert="false" />
+                    <setmkbound mk="1" />
+                    <!-- wall tank sud  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="0" z="#-2*Dp" />
+                        <size x="0.01" y="#0.2000-Dp" z="#domainH" />
+                        <layers vdp="0.5" />
+                    </drawbox>
+                    <setmkbound mk="2" />
+                    <!-- wall tank nord  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="#0.3+Dp" z="#-2*Dp" />
+                        <size x="0.01" y="0.2000" z="#domainH" />
+                        <layers vdp="0.5" />
+                    </drawbox>
+                    <setmkbound mk="3" />
+                    <!-- mobile gate  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="0.2" z="0" />
+                        <size x="0.01" y="0.1000" z="#domainH" />
+                        <layers vdp="0.5" />
+                    </drawbox>
+                    <setmkbound mk="4" />
+                    <!-- obstacle  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#0.510+Dp/2" y="#0.17+Dp/2" z="0" />
+                        <size x="#0.15-Dp" y="#0.080-Dp" z="#domainH" />
+                        <layers vdp="0.5" />
+                    </drawbox>
+                    <!-- save geometry for MDBC  -->
+                    <shapeout file="hdp" />
+                    <resetdraw />
+                    <!-- actual geometry  -->
+                    <setshapemode>actual | bound</setshapemode>
+                    <setdrawmode mode="full" />
+                    <setmkfluid mk="0" />
+                    <!-- fluid  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.0" y="0.0" z="0" />
+                        <size x="0.25" y="0.50" z="#waterH" />
+                    </drawbox>
+                    <setshapemode>actual | dp | bound</setshapemode>
+                    <setmkbound mk="10" />
+                    <!-- left wall tt  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#-5*Dp" y="#-5*Dp" z="#-5*Dp" />
+                        <size x="#5*Dp" y="#0.5+5*Dp" z="#domainH+5*Dp" />
+                    </drawbox>
+                    <setmkbound mk="11" />
+                    <!-- right wall tt  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="1" y="#-5*Dp" z="#-5*Dp" />
+                        <size x="#5*Dp" y="#0.5+10*Dp" z="#domainH+5*Dp" />
+                    </drawbox>
+                    <setshapemode>actual | dp| bound</setshapemode>
+                    <setfrdrawmode auto="true" />
+                    <setmkbound mk="4" />
+                    <!-- obstacle  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#0.510+Dp/2" y="#0.17+Dp/2" z="0" />
+                        <size x="#0.15-Dp" y="#0.080-Dp" z="#domainH" />
+
+                    </drawbox>
+                    <shapeout file="structure" />
+                    <setfrdrawmode auto="false" />
+                    <setmkbound mk="12" />
+                    <!-- bottom wall tt  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#-5*Dp" y="#-5*Dp" z="#-10*Dp" />
+                        <size x="#1+5*Dp" y="#0.5+5*Dp" z="#10*Dp" />
+                    </drawbox>
+                    <shapeout file="bottom" />
+                    <setmkbound mk="13" />
+                    <!-- front wall tt  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#-5*Dp" y="#-5*Dp" z="#-5*Dp" />
+                        <size x="#1+5*Dp" y="#5*Dp" z="#domainH+5*Dp" />
+                    </drawbox>
+                    <setmkbound mk="14" />
+                    <!-- back wall tt  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="#-5*Dp" y="0.5" z="#-5*Dp" />
+                        <size x="#1+5*Dp" y="#5*Dp" z="#domainH+5*Dp" />
+                    </drawbox>
+                    <setshapemode>actual | dp | bound</setshapemode>
+                    <setmkbound mk="1" />
+                    <!-- wall tank sud  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="0" z="#-2*Dp" />
+                        <size x="0.01" y="#0.2000-Dp" z="#domainH" />
+                    </drawbox>
+                    <shapeout file="w_s" />
+                    <setmkbound mk="2" />
+                    <!-- wall tank nord  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="#0.3+Dp" z="#-2*Dp" />
+                        <size x="0.01" y="0.2000" z="#domainH" />
+                    </drawbox>
+                    <shapeout file="w_n" />
+                    <setmkbound mk="3" />
+
+                    <!-- mobile gate  -->
+                    <drawbox>
+                        <boxfill>solid</boxfill>
+                        <point x="0.2500" y="0.2" z="0" />
+                        <size x="0.01" y="0.1000" z="#domainH" />
+                    </drawbox>
+                    <shapeout file="gate" />
+                </mainlist>
+            </commands>
+        </geometry>
+        <normals active="true">
+            <norgeometry comment="Define initial configuration of normals before applying other configurations">
+                <geometryfile file="[CaseName]_hdp_Actual.vtk" comment="File with boundary geometry (VTK format)" />
+                <distanceh v="3.0" comment="Maximum orthogonal distance (H*value) to compute normals data (default=2)" />
+                <svshapes v="true" comment="Saves VTK with geometry in triangles and quads with its normals for debug (default=false)" />
+            </norgeometry>
+            <norplane mkbound="10">
+                <point auto="true" comment="Point is calculated automatically accoding to normal configuration" />
+                <normal x="1" y="0" z="0" />
+                <maxdisth v="3.0" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </norplane>
+            <norplane mkbound="11">
+                <point auto="true" comment="Point is calculated automatically accoding to normal configuration" />
+                <normal x="-1" y="0" z="0" />
+                <maxdisth v="3.0" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </norplane>
+            <norplane mkbound="12">
+                <point auto="true" comment="Point is calculated automatically accoding to normal configuration" />
+                <normal x="0" y="0" z="1" />
+                <maxdisth v="5.0" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </norplane>
+            <norplane mkbound="13">
+                <point auto="true" comment="Point is calculated automatically accoding to normal configuration" />
+                <normal x="0" y="1" z="0" />
+                <maxdisth v="3.0" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </norplane>
+            <norplane mkbound="14">
+                <point auto="true" comment="Point is calculated automatically accoding to normal configuration" />
+                <normal x="0" y="-1" z="0" />
+                <maxdisth v="3.0" comment="Maximum distance to boundary limit. It uses H*maxdisth (default=2)" />
+            </norplane>
+        </normals>
+        <initials>
+            <rotateaxis mkbound="4" angle="-28.0724" anglesunits="degrees">
+                <axisp1 x="0.51" y="0.25" z="0" />
+                <axisp2 x="0.51" y="0.25" z="1" />
+            </rotateaxis>
+        </initials>
+        <motion>
+            <objreal ref="3">
+                <begin mov="1" start="0" />
+                <mvrectace id="1" duration="0.1">
+                    <velini x="0" y="0" z="0" units_comment="m/s" />
+                    <ace x="0" y="0" z="41.7" units_comment="m/s^2" />
+                </mvrectace>
+            </objreal>
+        </motion>
+    </casedef>
+    <execution>
+        <special>
+            <gauges>
+                <default>
+                    <_savevtkpart value="true" comment="Creates VTK files for each PART (default=false)" />
+                    <_computedt value="0.001" comment="Time between measurements. 0:all steps (default=TimeOut)" units_comment="s" />
+                    <_computetime start="0.0" end="10" comment="Start and end of measures. (default=simulation time)" units_comment="s" />
+                    <output value="true" comment="Creates CSV files of measurements (default=false)" />
+                    <_outputdt value="0.001" comment="Time between output measurements. 0:all steps (default=TimeOut)" units_comment="s" />
+                    <_outputtime start="0" end="10" comment="Start and end of output measures. (default=simulation time)" units_comment="s" />
+                </default>
+                <mesh name="Data-gate0_20">
+                    <computedt value="0.001" comment="Time between measurements. 0:all steps (default=TimeOut)" units_comment="s" />
+                    <outputdt value="0" comment="Time between output measurements. 0:all steps (default=TimeOut)" units_comment="s" />
+                    <point x="0.30" y="0" z="0" comment="Initial measurement position" units_comment="m" />
+                    <vec1 x="0" y="1" z="0" comment="Second axis vector to define the measurement grid (used for elevation calculation)" />
+                    <vec3 x="0" y="0" z="1" comment="Third axis vector to define the measurement grid (used for elevation calculation)" />
+                    <size1 length="0.5" distpt="#Dp" comment="Length and distance between measurement points for second direction" units_comment="m" />
+                    <size3 length="0.5" distpt="#Dp" comment="Length and distance between measurement points for third direction" units_comment="m" />
+                    <dirdat x="1" y="0" z="0" comment="Direction vector for computed linear velocity or other variables" />
+                    <outputdata value="vel,veldir,rhop,zsurf" comment="Type of results requested (vel, veldir, rhop, zsurf)" />
+                    <outputfmt value="bin" comment="Output formats (bin, csv) (default=csv)" />
+                    <_masslimit coef="0.5" comment="Coefficient to calculate mass of free-surface (default=0.5 on 3D and 0.4 on 2D)" />
+                    <_kclimit value="0.5" comment="Minimum value of sum_wab_vol to apply the Kernel Correction. Use NONE to disable (default=0.5)" />
+                    <_kcdummy value="0" comment="Dummy value for non-corrected values. Use NONE to disable (default=0)" />
+                </mesh>
+            </gauges>
+        </special>
+        <parameters>
+            <parameter key="SavePosDouble" value="0" comment="Saves particle position using double precision (default=0)" />
+            <parameter key="Boundary" value="2" comment="Boundary method 1:DBC, 2:mDBC (default=1)" />
+            <parameter key="StepAlgorithm" value="2" comment="Step Algorithm 1:Verlet, 2:Symplectic (default=1)" />
+            <parameter key="VerletSteps" value="40" comment="Verlet only: Number of steps to apply Euler timestepping (default=40)" />
+            <parameter key="Kernel" value="2" comment="Interaction Kernel 1:Cubic Spline, 2:Wendland (default=2)" />
+            <parameter key="ViscoTreatment" value="1" comment="Viscosity formulation 1:Artificial, 2:Laminar+SPS, 3:Laminar (default=1)" />
+            <parameter key="Visco" value="0.005" comment="Viscosity value. Typically 0.01 for Artificial and 1e-6 m^2/s (water kinematic viscosity) for Laminar" />
+            <parameter key="ViscoBoundFactor" value="0.5" comment="Multiply viscosity value with boundary (default=1)" />
+            <parameter key="DensityDT" value="3" comment="Density Diffusion Term 0:None, 1:Molteni, 2:Fourtakas, 3:Fourtakas(full) (default=0)" />
+            <parameter key="DensityDTvalue" value="0.1" comment="DDT value (default=0.1)" />
+            <parameter key="Shifting" value="0" comment="Shifting mode 0:None, 1:Ignore bound, 2:Ignore fixed, 3:Full (default=0)" />
+            <parameter key="ShiftCoef" value="-5" comment="Coefficient for shifting computation (default=-2)" />
+            <parameter key="ShiftTFS" value="2.75" comment="Threshold to detect free surface. Typically 1.5 for 2D and 2.75 for 3D (default=0)" />
+            <parameter key="RigidAlgorithm" value="1" comment="Rigid Algorithm 0:collision-free, 1:SPH, 2:DEM, 3:Chrono (default=1)" />
+            <parameter key="FtPause" value="0.0" comment="Time to freeze the floatings at simulation start (warmup) (default=0)" units_comment="seconds" />
+            <parameter key="CoefDtMin" value="0.03" comment="Coefficient to calculate minimum time step dtmin=coefdtmin*h/speedsound (default=0.05)" />
+            <parameter key="DtIni" value="0" comment="Initial time step. Use 0 to default use (default=h/speedsound)" units_comment="seconds" />
+            <parameter key="DtMin" value="0" comment="Minimum time step. Use 0 to default use (default=coefdtmin*h/speedsound)" units_comment="seconds" />
+            <parameter key="DtFixed" value="0" comment="Fixed Dt value. Use 0 to disable (default=disabled)" units_comment="seconds" />
+            <parameter key="DtFixedFile" value="NONE" comment="Dt values are loaded from file. Use NONE to disable (default=disabled)" units_comment="milliseconds (ms)" />
+            <parameter key="DtAllParticles" value="0" comment="Velocity of particles used to calculate DT. 1:All, 0:Only fluid/floating (default=0)" />
+            <parameter key="TimeMax" value="5" comment="Time of simulation" units_comment="seconds" />
+            <parameter key="TimeOut" value="0.025" comment="Time out data" units_comment="seconds" />
+            <parameter key="RhopOutMin" value="700" comment="Minimum density valid (default=700)" units_comment="kg/m^3" />
+            <parameter key="RhopOutMax" value="1300" comment="Maximum density valid (default=1300)" units_comment="kg/m^3" />
+            <parameter key="WrnPartsOut" value="1" comment="Active warning according to number of out particles (default=1)" />
+            <parameter key="MinFluidStop" value="0" comment="Minimum proportion of initial fluid particles to continue the simulation 0:Never stops, 0.1:Stops when fluid drops to 10%. (default=0)" />
+            <simulationdomain comment="Defines domain of simulation (default=Uses minimum and maximum position of the generated particles)">
+                <posmin x="default" y="default" z="default" comment="e.g.: x=0.5, y=default-1, z=default-10%" />
+                <posmax x="default" y="default" z="default + 100%" />
+            </simulationdomain>
+        </parameters>
+    </execution>
+</case>

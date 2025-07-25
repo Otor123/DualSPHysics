@@ -1,0 +1,13 @@
+POINTS
+20.70 0 0.5921
+23.5 0 0.7161
+26.75 0 0.7161
+30.00 0 0.7161
+33.25 0 0.7161
+
+
+
+#"POINTSLIST"
+#BeginX BeginY BeginZ
+#StepX StepY StepZ
+#CountX CountY CountZ

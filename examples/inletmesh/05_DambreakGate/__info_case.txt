@@ -1,0 +1,12 @@
+﻿The CaseDamBreakGate is based on the work published by Ruffini et al. (2022). 
+
+The study validates the Mesh-IN method against a three dimensional dam-break experiment with a vertical opening gate. 
+
+Two sets of simulations are carried out. The first set consists in the GD (General Domain) simulation of the experiment.
+In the second one, the MESH-IN method can be used to reduce the domain and decrease the computational runtime.
+
+The CaseDambreakGate_GD creates a GaugesMesh_Data-gate0_20.mbi4 that includes the information used by MESH-IN to generate the same flow at the selected MESH-IN location (CaseDambreakGate_MeshIN).
+
+References:
+Ruffini G, Domínguez JM, Briganti R, Altomare C. Stolle J, Crespo AJC, Ghiassi B, Capasso S, De Girolano P. 2023. MESH-IN: A MESHed INlet offline coupling method for 3-D extreme hydrodynamic events in DualSPHysics. 
+Ocean Engineering, 268, 113400. doi:org/10.1016/j.oceaneng.2022.113400.
