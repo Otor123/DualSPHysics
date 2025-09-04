@@ -18,6 +18,8 @@ examples_vres/*
 examples_vres/*
 examples/**/**/*_out
 examples/**/**/**/*_out
+examples/ServerWarmetauscher
+examples/Warmetauscher
 
 # Alle *_out Ordner überall im Repo ignorieren
 **/*_out/
