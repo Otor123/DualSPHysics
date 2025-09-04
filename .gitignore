@@ -16,6 +16,13 @@ examples/main/11_Floating/*_out
 examples/11_Floating/*
 examples_vres/*
 examples_vres/*
+examples/**/**/*_out
+examples/**/**/**/*_out
+
+# Alle *_out Ordner überall im Repo ignorieren
+**/*_out/
+**/*_out_*/
+**/*_out*/
 
 ## Ignores other directories.
 __Tools__
