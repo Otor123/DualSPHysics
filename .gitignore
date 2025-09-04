@@ -12,6 +12,8 @@ src/source/___*
 ## Ignores output of examples in 01_DamBreak.
 examples/main/01_DamBreak/*_out
 examples/01_DamBreak/*
+examples/main/11_Floating/*_out
+examples/11_Floating/*
 examples_vres/*
 examples_vres/*
 
@@ -32,3 +34,53 @@ src/lib/vs2022/*.pdb
 src/lib/vs2022/LibDSphMoorDynPlus_*.*
 bin/windows/DualSPHysics*.exe
 bin/linux/DualSPHysics*_linux64
+
+# --- Binär-/Objektdateien
+*.o
+*.obj
+*.lo
+*.a
+*.la
+*.lib
+*.so
+*.dylib
+*.dll
+*.exp
+*.pdb
+*.idb
+*.ilk
+*.ipdb
+*.iobj
+
+
+# Build-Ordner
+build/
+src/source/build/
+cmake-build*/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/Makefile
+**/cmake_install.cmake
+**/compile_commands.json
+**/rules.ninja
+**/build.ninja
+**/.ninja_deps
+**/.ninja_log
+
+# DualSPHysics Outputs
+*.bi4
+*.obi4
+*.ibi4
+*.csv
+*.out
+*.vtk
+*.vtp
+
+
+# IDE/Editor
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
