@@ -1235,6 +1235,27 @@ void JSphCpuSingle::Run(std::string appname,const JSphCfgRun* cfg,JLog2* log){
   FinishRun(minfluidstopped);
 }
 
+//Scheuerlein
+
+// In einer passenden .cpp (z.B. JSphCpuSingle.cpp, static in anonyme NS) hinzufügen:
+static void BuildBoundaryNormalsByIdp(
+  unsigned casenbound,
+  const unsigned* __restrict idp,     // Idp_c->cptr()
+  const tfloat3* __restrict bnor_src, // BoundNor_c->cptr()
+  unsigned np,
+  std::vector<tfloat3>& bnor_out      // size = casenbound
+){
+std::fill(bnor_out.begin(), bnor_out.end(), tfloat3{0,0,0});
+for(unsigned i=0; i<np; ++i){
+  const unsigned id = idp[i];
+  if(id < casenbound){ // boundary
+    bnor_out[id] = bnor_src[i];
+  }
+}
+}
+
+// Scheuerlein
+
 //==============================================================================
 /// Generates files with output data.
 /// Genera los ficheros de salida de datos.
@@ -1294,6 +1315,29 @@ void JSphCpuSingle::SaveData(){
   //-Stores particle data. | Graba datos de particulas.
   JDataArrays arrays;
   AddBasicArrays(arrays,npsave,svpos.cptr(),svidp.cptr(),svvel.cptr(),svrho.cptr());
+
+  // >>>>>>> NEU: BoundNor ins bi4 mitschreiben (Weg A) Scheuerlein
+  if(UseNormals){
+    const unsigned casenbound = unsigned(CaseNfixed + CaseNmoving + CaseNfloat);
+    if(casenbound){
+      std::vector<tfloat3> bnor(casenbound);
+      BuildBoundaryNormalsByIdp(
+        casenbound,
+        Idp_c->cptr(),
+        BoundNor_c->cptr(),
+        Np,
+        bnor
+      );
+
+      // Variante 1: generische Array-API (häufigster Fall)
+      arrays.AddArray("BoundNor", casenbound, bnor.data());
+      // Falls deine JDataArrays-API anders heißt, nutze das äquivalente Add:
+      // arrays.AddArray("BoundNor", JDataType::Float3, casenbound, bnor.data());
+      // arrays.AddFloat3("BoundNor", casenbound, bnor.data());
+    }
+  }
+  // <<<<<<< NEU Ende Scheuerlein
+
   JSph::SaveData(npsave,arrays,1,&vdom,infoplus);
   //-Save VTK file with current boundary normals (for debug).
   if(UseNormals && SvNormals)SaveVtkNormals(DirVtkOut+"Normals.vtk",Part

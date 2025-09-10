@@ -1046,6 +1046,24 @@ void JSphGpuSingle::Run(std::string appname,const JSphCfgRun* cfg,JLog2* log){
   FinishRun(minfluidstopped);
 }
 
+//AddToDo: Scheuerlein 10.09
+
+static void BuildBoundaryNormalsByIdp(
+  unsigned casenbound,
+  const unsigned* __restrict idp,     // Idp_c->cptr()
+  const tfloat3* __restrict bnor_src, // BoundNor_c->cptr()
+  unsigned np,
+  std::vector<tfloat3>& bnor_out      // size = casenbound
+){
+std::fill(bnor_out.begin(), bnor_out.end(), tfloat3{0,0,0});
+for(unsigned i=0; i<np; ++i){
+  const unsigned id = idp[i];
+  if(id < casenbound){ // boundary
+    bnor_out[id] = bnor_src[i];
+  }
+}
+}
+
 //==============================================================================
 /// Generates files with output data.
 /// Genera los ficheros de salida de datos.
@@ -1105,6 +1123,28 @@ void JSphGpuSingle::SaveData(){
   //-Stores particle data. | Graba datos de particulas.
   JDataArrays arrays;
   AddBasicArrays(arrays,npsave,AuxPos_c->cptr(),Idp_c->cptr(),AuxVel_c->cptr(),AuxRho_c->cptr());
+  
+  
+    // >>>>>>> NEU: Scheuerlein
+    if(UseNormals){
+      const unsigned casenbound = unsigned(CaseNfixed + CaseNmoving + CaseNfloat);
+      if(casenbound){
+        std::vector<tfloat3> bnor(casenbound);
+        BuildBoundaryNormalsByIdp(
+          casenbound,
+          Idp_c->cptr(),        // CPU-IDs (Aux* sind schon down/reordered)
+          BoundNor_c->cptr(),   // CPU-Kopie der Normalen
+          Np,
+          bnor
+        );
+        arrays.AddArrayVec3f("BoundNor", casenbound, bnor.data());
+      }
+    }
+    // Scheuerlein
+  
+  
+  
+  
   JSph::SaveData(npsave,arrays,1,&vdom,infoplus);
   //-Save VTK file with current boundary normals (for debug).
   if(UseNormals && SvNormals)SaveVtkNormalsGpu(DirVtkOut+"Normals.vtk",Part
