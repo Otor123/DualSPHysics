@@ -1238,8 +1238,7 @@ void JSphCpuSingle::Run(std::string appname,const JSphCfgRun* cfg,JLog2* log){
 //Scheuerlein
 
 // In einer passenden .cpp (z.B. JSphCpuSingle.cpp, static in anonyme NS) hinzufügen:
-static void BuildBoundaryNormalsByIdp(
-  unsigned casenbound,
+static void BuildBoundaryNormalsByIdp(unsigned casenbound,
   const unsigned* __restrict idp,     // Idp_c->cptr()
   const tfloat3* __restrict bnor_src, // BoundNor_c->cptr()
   unsigned np,
@@ -1316,34 +1315,27 @@ void JSphCpuSingle::SaveData(){
   JDataArrays arrays;
   AddBasicArrays(arrays,npsave,svpos.cptr(),svidp.cptr(),svvel.cptr(),svrho.cptr());
 
-  // >>>>>>> NEU: BoundNor ins bi4 mitschreiben (Weg A) Scheuerlein
-  if(UseNormals){
-    const unsigned casenbound = unsigned(CaseNfixed + CaseNmoving + CaseNfloat);
-    if(casenbound){
-      std::vector<tfloat3> bnor(casenbound);
-      BuildBoundaryNormalsByIdp(
-        casenbound,
-        Idp_c->cptr(),
-        BoundNor_c->cptr(),
-        Np,
-        bnor
-      );
+  //Scheuerlein Test1
+  //  if(CaseNbound){
+  //    std::vector<tfloat3> bnor(CaseNbound);
+  //    BuildBoundaryNormalsByIdp(CaseNbound, Idp_c->cptr(), BoundNor_c->cptr(), Np, bnor);
 
       // Variante 1: generische Array-API (häufigster Fall)
-      arrays.AddArray("BoundNor", casenbound, bnor.data());
+  //    arrays.AddArray("BoundNor2_meta_u32", CaseNbound, bnor.data());   
+  //    Log->Printf("Boundary Normals Count - while Saving: %u, Expected: %u", bnor.size(), CaseNbound);
       // Falls deine JDataArrays-API anders heißt, nutze das äquivalente Add:
       // arrays.AddArray("BoundNor", JDataType::Float3, casenbound, bnor.data());
       // arrays.AddFloat3("BoundNor", casenbound, bnor.data());
-    }
-  }
+  //  }
   // <<<<<<< NEU Ende Scheuerlein
-
   JSph::SaveData(npsave,arrays,1,&vdom,infoplus);
+
   //-Save VTK file with current boundary normals (for debug).
   if(UseNormals && SvNormals)SaveVtkNormals(DirVtkOut+"Normals.vtk",Part
     ,npsave,Npb,Pos_c->cptr(),Idp_c->cptr(),BoundNor_c->cptr(),1.f);
   //-Save extra data.
   if(SvExtraDataBi4)SaveExtraData();
+
   Timersc->TmStop(TMC_SuSavePart);
 }
 
@@ -1351,6 +1343,18 @@ void JSphCpuSingle::SaveData(){
 /// Displays and stores final summary of the execution.
 /// Muestra y graba resumen final de ejecucion.
 //==============================================================================
+//void JSphCpuSingle::SaveExtraData(){
+//  const bool svextra=(BoundNor_c!=NULL);
+//    SvExtraDataBi4->InitPartData(Part,TimeStep,Nstep);
+//    //-Saves normals of mDBC.
+//    if(BoundNor_c){
+//      SvExtraDataBi4->AddNormals(UseNormalsFt,Np,Npb,Idp_c->cptr()
+//        ,(PeriActive? Code_c->cptr(): NULL),BoundNor_c->cptr());
+//    }
+//    //-Saves file.
+//    SvExtraDataBi4->SavePartData();
+//}
+
 void JSphCpuSingle::SaveExtraData(){
   const bool svextra=(BoundNor_c!=NULL);
   if(svextra && SvExtraDataBi4->CheckSave(Part)){

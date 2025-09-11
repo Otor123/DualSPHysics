@@ -8,8 +8,14 @@
         //"program": "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/bin/linux/DualSPHysics5.4CPU_linux64",
         "program": "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/src/source/DualSPHysics5.4CPU_linux64_debug",
         "args": [
-            "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/main/01_DamBreak/CaseDambreakVal2D"
-        ],
+            //"/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/main/01_DamBreak/CaseDambreakVal2D"
+            
+            // "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res",
+        
+
+            "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res", "-sv:bin", "-svextraparts:all"
+
+          ],
         "stopAtEntry": false,
         "cwd": "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/bin/linux",
         "environment": [

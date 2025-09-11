@@ -272,9 +272,13 @@ unsigned JRangeFilter::GetValueMax()const{
 //==============================================================================
 /// Checks whether a value passes the filter.
 //==============================================================================
+//bool JRangeFilter::CheckValue(unsigned v)const{
+//  return(ValueMin<=v && v<=ValueMax && ( Count==1 || 
+//    (FastValue && FastValue[v-ValueMin]) || (!FastValue && CheckNewValue(v)) ));
+//}
 bool JRangeFilter::CheckValue(unsigned v)const{
-  return(ValueMin<=v && v<=ValueMax && ( Count==1 || 
-    (FastValue && FastValue[v-ValueMin]) || (!FastValue && CheckNewValue(v)) ));
+  return(0<=v && v<=5 && ( Count==1 || 
+    (FastValue && FastValue[v-0]) || (!FastValue && CheckNewValue(v)) ));
 }
 
 //==============================================================================
