@@ -219,15 +219,7 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
   if(fun::FileExists(oldnorfile))Run_ExceptioonFile(
     "Old normals data file is not supported for current version. Use GenCase v5.4.350 or higher.",oldnorfile);
 
-
-  //Old Scheuerlein  
-  //const ullong casenbound=CaseNfixed+CaseNmoving+CaseNfloat;
-  //if(casenbound>=ullong(UINT_MAX))Run_Exceptioon("Number of boundary particles is too large.");
-  //const unsigned boundcount=(pd.ArrayExists("BoundNor")? unsigned(casenbound): 0);
-
-  //New Scheuerlein
-
-  //1. if ony Part_0001
+  //1. if Part_0001 includes Normals (named: BoundNor - initalState)
   const ullong casenbound = CaseNfixed + CaseNmoving + CaseNfloat;
   if(casenbound >= ullong(UINT_MAX)) Run_Exceptioon("Number of boundary particles is too large.");
 
@@ -235,26 +227,25 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
   bool hasBoundNorInExtra = false;
   std::string extrafile;
 
-  //2. if PartExtra_0001
-  if(!hasBoundNorInMain && PartBegin){ // Nur sinnvoll bei Restart/Part-Dateien
+  //2. if PartExtra_0001 includes Normals (named: Normals - initalState look: JDsExtraDataSave::AddNormals)
+  if(!hasBoundNorInMain && PartBegin){ // only for Restart/Part-files
     extrafile = fun::GetDirWithSlash(!PartBegin ? casedir : casedirbegin)
               + fun::PrintStr("PartExtra_%04u.bi4", PartBegin);
     if(fun::FileExists(extrafile)){
       try{
         JBinaryData bd;
-        bd.LoadFile(extrafile); // nur Header prüfen
+        bd.LoadFile(extrafile); 
         bd.GetArrayTpSize("Normals", JBinaryDataDef::DatFloat3,
           size_t(casenbound), extrafile);
         hasBoundNorInExtra = true;
       }catch(...){
-        // Extra-Datei existiert, aber nicht lesbar → ignoriere und lade ohne BoundNor
+        // Extra-files exist but not readable
         hasBoundNorInExtra = false;
       }
     }
   }
 
   const unsigned boundcount = (hasBoundNorInMain || hasBoundNorInExtra) ? unsigned(casenbound) : 0;
-  // New Scheuerlein
    
   //-Loads data for restarting.
   if(PartBegin){
@@ -302,27 +293,14 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
         pd.Get_Rhop(npok,auxf);  
         for(unsigned p=0;p<npok;p++)VelRho[ntot+p]=TFloat4(auxf3[p].x,auxf3[p].y,auxf3[p].z,auxf[p]);
 
-        //Old Scheuerlein 
-        // if(BoundNor && Npiece==1){
-        //  fun::PrintStr("until here i came");
-        //  const JBinaryDataArray* ar=pd.GetArray("BoundNor");
-        //  if(ar->GetFileDataCount()!=BoundCount)Run_Exceptioon(
-        //    fun::PrintStr("Size of loaded BoundNor data does not match number of boundary particles., BoundNorIs=%u, BoundNorExpected=%u", ar->GetFileDataCount(),BoundCount));
-        //  pd.Get_BoundNor(BoundCount,BoundNor);
-        //  fun::PrintStr("Looks like loaded BoundNor daata does match., BoundNorIs=%u, BoundNorExpected=%u", ar->GetFileDataCount(),BoundCount);
-        //}
-        //Old Scheuerlein 
-
-
-
       }
       ntot+=npok;
     }
 
-    if(BoundNor){ // Speicher ist allokiert, also wollen wir laden – aus Main oder Extra
+    if(BoundNor){ // storage is allocaded -> can load data
       bool loaded = false;
     
-      // 1) Versuch: aus dem Haupt-BI4, nur sinnvoll wenn die Array dort existiert.
+      // 1) Try: from Part_0001.bi4
       if(hasBoundNorInMain && Npiece==1){
         const JBinaryDataArray* ar = pd.GetArray("BoundNor");
         if(!ar) Run_Exceptioon("BoundNor array announced in main file but not found.");
@@ -332,20 +310,18 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
         loaded = true;
       }
     
-      // 2) Fallback: aus der Extra-Datei PartExtra_XXXX.bi4
+      // 2) Fallback: from file PartExtra_XXXX.bi4
       if(!loaded && hasBoundNorInExtra && PartBegin){
-        //const std::string extrafile = fun::GetDirWithSlash(!PartBegin ? casedir : casedirbegin)
-        //                            + fun::PrintStr("PartExtra_%04u.bi4", PartBegin);
         JBinaryData bd;
         bd.LoadFile(extrafile);
-        bd.GetArrayTpSize("Normals", JBinaryDataDef::DatFloat3,
-                          size_t(boundcount), extrafile);           
+        if(bd.GetArrayTpSize("Normals", JBinaryDataDef::DatFloat3,
+                          size_t(boundcount), extrafile))Run_Exceptioon(fun::PrintStr("not able to get size of Normals out of binary file %u", extrafile.c_str()));           
         bd.CopyArrayData("Normals", size_t(boundcount), BoundNor);
 
         loaded = true;
       }
 
-            // 3) Wenn weder Main noch Extra geladen wurde, aber BoundCount>0 erwartet war → Fehler
+      // 3) if no success with loading and finding header in .bi4
       if(!loaded && boundcount>0){
         Run_Exceptioon("BoundNor expected but not found in main or extra file.");
       }
