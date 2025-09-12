@@ -350,8 +350,6 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
         Run_Exceptioon("BoundNor expected but not found in main or extra file.");
       }
 
-    
-
     }  
     
     delete[] auxf3; auxf3=NULL;
