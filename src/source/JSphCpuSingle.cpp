@@ -1302,7 +1302,6 @@ void JSphCpuSingle::SaveData(){
     ,npsave,Npb,Pos_c->cptr(),Idp_c->cptr(),BoundNor_c->cptr(),1.f);
   //-Save extra data.
   if(SvExtraDataBi4)SaveExtraData();
-
   Timersc->TmStop(TMC_SuSavePart);
 }
 

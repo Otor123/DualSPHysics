@@ -52,6 +52,7 @@
 #include "JDsExtraData.h"
 #include "FunctionsCuda.h"
 #include "JDsOutputParts.h" //<vs_outpaarts>
+#include "JBinaryData.h"
 
 #include <climits>
 
@@ -70,6 +71,40 @@ JSphGpuSingle::JSphGpuSingle():JSphGpu(false){
 JSphGpuSingle::~JSphGpuSingle(){
   DestructorActive=true;
   delete CellDivSingle; CellDivSingle=NULL;
+}
+
+//==============================================================================
+/// helper: try to load BoundNor from PartExtra_XXXX.bi4 
+/// 
+//==============================================================================
+static bool TryLoadBoundNorFromExtra(const std::string& part_file,
+  unsigned bound_count,
+  std::vector<tfloat3>& out_bnor,
+  std::string& used_extra_path)
+{
+// build .../PartExtra_XXXX.bi4 from .../Part_XXXX.bi4
+std::string extra = part_file;
+const size_t p = extra.rfind("Part_");
+if(p == std::string::npos) return false;
+extra.replace(p, /*len*/5, "PartExtra_");
+
+if(!fun::FileExists(extra)) return false;
+
+JBinaryData bd;
+try{
+bd.LoadFile(extra);
+}catch(...){
+return false;
+}
+
+// Validate type & count, then copy
+if(bd.GetArrayTpSize("BoundNor", JBinaryDataDef::DatFloat3, size_t(bound_count), extra))
+return false;
+
+out_bnor.resize(bound_count);
+bd.CopyArrayData("BoundNor", size_t(bound_count), out_bnor.data());
+used_extra_path = extra;
+return true;
 }
 
 //==============================================================================
@@ -166,14 +201,45 @@ void JSphGpuSingle::ConfigDomain(){
   Idp_c   ->CopyFrom(PartsLoaded->GetIdp(),Np);
   Velrho_c->CopyFrom(PartsLoaded->GetVelRho(),Np);
   acfloat3 boundnorc("boundnor",Arrays_Cpu,UseNormals);
+
+  //Old Scheuerlein
+  //if(UseNormals){
+  //  boundnorc.Memset(0,Np);
+  //  if(PartsLoaded->GetBoundNor())boundnorc.CopyFrom(PartsLoaded->GetBoundNor(),CaseNbound);
+  //  else if(AbortNoNormals)Run_ExceptioonFile(
+  //    "No normal data for mDBC in the input file.",PartsLoaded->GetFileLoaded());
+  //  else Log->PrintWarning(fun::PrintStr("No normal data for mDBC in the input file (%s)."
+  //    ,PartsLoaded->GetFileLoaded().c_str()));
+  //}
+  //Old Scheuerlein
+
   if(UseNormals){
-    boundnorc.Memset(0,Np);
-    if(PartsLoaded->GetBoundNor())boundnorc.CopyFrom(PartsLoaded->GetBoundNor(),CaseNbound);
-    else if(AbortNoNormals)Run_ExceptioonFile(
-      "No normal data for mDBC in the input file.",PartsLoaded->GetFileLoaded());
-    else Log->PrintWarning(fun::PrintStr("No normal data for mDBC in the input file (%s)."
-      ,PartsLoaded->GetFileLoaded().c_str()));
+    boundnorc.Memset(0, Np);
+  
+    if(const tfloat3* bnor = PartsLoaded->GetBoundNor()){
+      // normals present in Part_XXXX.bi4
+      boundnorc.CopyFrom(bnor, CaseNbound);
+    }else{
+      // Fallback to PartExtra_XXXX.bi4
+      std::vector<tfloat3> tmp;
+      std::string extra_path;
+      const bool ok = TryLoadBoundNorFromExtra(PartsLoaded->GetFileLoaded(),
+                                               CaseNbound, tmp, extra_path);
+      if(ok){
+        boundnorc.CopyFrom(tmp.data(), CaseNbound);
+        Log->Print(fun::PrintStr("Loaded BoundNor from extra file: %s", extra_path.c_str()));
+      }else if(AbortNoNormals){
+        Run_ExceptioonFile("No normal data for mDBC in the input file.",
+                           PartsLoaded->GetFileLoaded());
+      }else{
+        Log->PrintWarning(fun::PrintStr(
+          "No normal data for mDBC in the input file (%s) and no BoundNor in extra file.",
+          PartsLoaded->GetFileLoaded().c_str()));
+      }
+    }
   }
+  
+
 
   //-Computes radius of floating bodies.
   if(CaseNfloat && PeriActive!=0 && !PartBegin)
@@ -1046,23 +1112,7 @@ void JSphGpuSingle::Run(std::string appname,const JSphCfgRun* cfg,JLog2* log){
   FinishRun(minfluidstopped);
 }
 
-//AddToDo: Scheuerlein 10.09
 
-static void BuildBoundaryNormalsByIdp(
-  unsigned casenbound,
-  const unsigned* __restrict idp,     // Idp_c->cptr()
-  const tfloat3* __restrict bnor_src, // BoundNor_c->cptr()
-  unsigned np,
-  std::vector<tfloat3>& bnor_out      // size = casenbound
-){
-std::fill(bnor_out.begin(), bnor_out.end(), tfloat3{0,0,0});
-for(unsigned i=0; i<np; ++i){
-  const unsigned id = idp[i];
-  if(id < casenbound){ // boundary
-    bnor_out[id] = bnor_src[i];
-  }
-}
-}
 
 //==============================================================================
 /// Generates files with output data.
@@ -1122,28 +1172,7 @@ void JSphGpuSingle::SaveData(){
   const tdouble6 vdom=CellDivSingle->GetDomainLimitsMinMax();
   //-Stores particle data. | Graba datos de particulas.
   JDataArrays arrays;
-  AddBasicArrays(arrays,npsave,AuxPos_c->cptr(),Idp_c->cptr(),AuxVel_c->cptr(),AuxRho_c->cptr());
-  
-  
-    // >>>>>>> NEU: Scheuerlein
-    if(UseNormals){
-      const unsigned casenbound = unsigned(CaseNfixed + CaseNmoving + CaseNfloat);
-      if(casenbound){
-        std::vector<tfloat3> bnor(casenbound);
-        BuildBoundaryNormalsByIdp(
-          casenbound,
-          Idp_c->cptr(),        // CPU-IDs (Aux* sind schon down/reordered)
-          BoundNor_c->cptr(),   // CPU-Kopie der Normalen
-          Np,
-          bnor
-        );
-        arrays.AddArrayVec3f("BoundNor", casenbound, bnor.data());
-      }
-    }
-    // Scheuerlein
-  
-  
-  
+  AddBasicArrays(arrays,npsave,AuxPos_c->cptr(),Idp_c->cptr(),AuxVel_c->cptr(),AuxRho_c->cptr()); 
   
   JSph::SaveData(npsave,arrays,1,&vdom,infoplus);
   //-Save VTK file with current boundary normals (for debug).
