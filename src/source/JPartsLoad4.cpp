@@ -312,10 +312,12 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
         //  fun::PrintStr("Looks like loaded BoundNor daata does match., BoundNorIs=%u, BoundNorExpected=%u", ar->GetFileDataCount(),BoundCount);
         //}
         //Old Scheuerlein 
+
+
+
       }
       ntot+=npok;
     }
-
 
     if(BoundNor){ // Speicher ist allokiert, also wollen wir laden – aus Main oder Extra
       bool loaded = false;
@@ -342,11 +344,14 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
 
         loaded = true;
       }
-    
-      // 3) Wenn weder Main noch Extra geladen wurde, aber BoundCount>0 erwartet war → Fehler
+
+            // 3) Wenn weder Main noch Extra geladen wurde, aber BoundCount>0 erwartet war → Fehler
       if(!loaded && boundcount>0){
         Run_Exceptioon("BoundNor expected but not found in main or extra file.");
       }
+
+    
+
     }  
     
     delete[] auxf3; auxf3=NULL;
