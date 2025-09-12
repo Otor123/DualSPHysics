@@ -10,10 +10,10 @@
         "args": [
             //"/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/main/01_DamBreak/CaseDambreakVal2D"
             
-            // "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res",
+             "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res","-sv:bin"
         
 
-            "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res", "-sv:bin", "-svextraparts:all"
+            //"/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res", "-sv:bin", "-svextraparts:all"
 
           ],
         "stopAtEntry": false,
