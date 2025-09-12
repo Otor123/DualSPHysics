@@ -314,10 +314,9 @@ void JPartsLoad4::LoadParticles(const std::string& casedir
       if(!loaded && hasBoundNorInExtra && PartBegin){
         JBinaryData bd;
         bd.LoadFile(extrafile);
-        if(bd.GetArrayTpSize("Normals", JBinaryDataDef::DatFloat3,
-                          size_t(boundcount), extrafile))Run_Exceptioon(fun::PrintStr("not able to get size of Normals out of binary file %u", extrafile.c_str()));           
+        bd.GetArrayTpSize("Normals", JBinaryDataDef::DatFloat3,
+                          size_t(boundcount), extrafile);         
         bd.CopyArrayData("Normals", size_t(boundcount), BoundNor);
-
         loaded = true;
       }
 
