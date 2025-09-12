@@ -52,7 +52,8 @@
 #include "JDsExtraData.h"
 #include "FunctionsCuda.h"
 #include "JDsOutputParts.h" //<vs_outpaarts>
-#include "JBinaryData.h"
+//Scheuerlein
+//#include "JBinaryData.h"
 
 #include <climits>
 
@@ -75,37 +76,37 @@ JSphGpuSingle::~JSphGpuSingle(){
 
 //==============================================================================
 /// helper: try to load BoundNor from PartExtra_XXXX.bi4 
-/// 
+/// //Scheuerlelin
 //==============================================================================
-static bool TryLoadBoundNorFromExtra(const std::string& part_file,
-  unsigned bound_count,
-  std::vector<tfloat3>& out_bnor,
-  std::string& used_extra_path)
-{
-// build .../PartExtra_XXXX.bi4 from .../Part_XXXX.bi4
-std::string extra = part_file;
-const size_t p = extra.rfind("Part_");
-if(p == std::string::npos) return false;
-extra.replace(p, /*len*/5, "PartExtra_");
-
-if(!fun::FileExists(extra)) return false;
-
-JBinaryData bd;
-try{
-bd.LoadFile(extra);
-}catch(...){
-return false;
-}
-
-// Validate type & count, then copy
-if(bd.GetArrayTpSize("BoundNor", JBinaryDataDef::DatFloat3, size_t(bound_count), extra))
-return false;
-
-out_bnor.resize(bound_count);
-bd.CopyArrayData("BoundNor", size_t(bound_count), out_bnor.data());
-used_extra_path = extra;
-return true;
-}
+//static bool TryLoadBoundNorFromExtra(const std::string& part_file,
+//  unsigned bound_count,
+//  std::vector<tfloat3>& out_bnor,
+//  std::string& used_extra_path)
+//{
+//// build .../PartExtra_XXXX.bi4 from .../Part_XXXX.bi4
+//std::string extra = part_file;
+//const size_t p = extra.rfind("Part_");
+//if(p == std::string::npos) return false;
+//extra.replace(p, /*len*/5, "PartExtra_");
+//
+//if(!fun::FileExists(extra)) return false;
+//
+//JBinaryData bd;
+//try{
+//bd.LoadFile(extra);
+//}catch(...){
+//return false;
+//}
+//
+//// Validate type & count, then copy
+//if(bd.GetArrayTpSize("BoundNor", JBinaryDataDef::DatFloat3, size_t(bound_count), extra))
+//return false;
+//
+//out_bnor.resize(bound_count);
+//bd.CopyArrayData("BoundNor", size_t(bound_count), out_bnor.data());
+//used_extra_path = extra;
+//return true;
+//}
 
 //==============================================================================
 /// Returns the memory allocated to the CPU.
@@ -203,42 +204,42 @@ void JSphGpuSingle::ConfigDomain(){
   acfloat3 boundnorc("boundnor",Arrays_Cpu,UseNormals);
 
   //Old Scheuerlein
-  //if(UseNormals){
-  //  boundnorc.Memset(0,Np);
-  //  if(PartsLoaded->GetBoundNor())boundnorc.CopyFrom(PartsLoaded->GetBoundNor(),CaseNbound);
-  //  else if(AbortNoNormals)Run_ExceptioonFile(
-  //    "No normal data for mDBC in the input file.",PartsLoaded->GetFileLoaded());
-  //  else Log->PrintWarning(fun::PrintStr("No normal data for mDBC in the input file (%s)."
-  //    ,PartsLoaded->GetFileLoaded().c_str()));
-  //}
-  //Old Scheuerlein
-
   if(UseNormals){
-    boundnorc.Memset(0, Np);
-  
-    if(const tfloat3* bnor = PartsLoaded->GetBoundNor()){
-      // normals present in Part_XXXX.bi4
-      boundnorc.CopyFrom(bnor, CaseNbound);
-    }else{
-      // Fallback to PartExtra_XXXX.bi4
-      std::vector<tfloat3> tmp;
-      std::string extra_path;
-      const bool ok = TryLoadBoundNorFromExtra(PartsLoaded->GetFileLoaded(),
-                                               CaseNbound, tmp, extra_path);
-      if(ok){
-        boundnorc.CopyFrom(tmp.data(), CaseNbound);
-        Log->Print(fun::PrintStr("Loaded BoundNor from extra file: %s", extra_path.c_str()));
-      }else if(AbortNoNormals){
-        Run_ExceptioonFile("No normal data for mDBC in the input file.",
-                           PartsLoaded->GetFileLoaded());
-      }else{
-        Log->PrintWarning(fun::PrintStr(
-          "No normal data for mDBC in the input file (%s) and no BoundNor in extra file.",
-          PartsLoaded->GetFileLoaded().c_str()));
-      }
-    }
+    boundnorc.Memset(0,Np);
+    if(PartsLoaded->GetBoundNor())boundnorc.CopyFrom(PartsLoaded->GetBoundNor(),CaseNbound);
+    else if(AbortNoNormals)Run_ExceptioonFile(
+      "No normal data for mDBC in the input file.",PartsLoaded->GetFileLoaded());
+    else Log->PrintWarning(fun::PrintStr("No normal data for mDBC in the input file (%s)."
+      ,PartsLoaded->GetFileLoaded().c_str()));
   }
-  
+  //Old Scheuerlein
+  //New Scheuerlein
+  //if(UseNormals){
+  //  boundnorc.Memset(0, Np);
+  //
+  //  if(const tfloat3* bnor = PartsLoaded->GetBoundNor()){
+  //    // normals present in Part_XXXX.bi4
+  //    boundnorc.CopyFrom(bnor, CaseNbound);
+  //  }else{
+  //    // Fallback to PartExtra_XXXX.bi4
+  //    std::vector<tfloat3> tmp;
+  //    std::string extra_path;
+  //    const bool ok = TryLoadBoundNorFromExtra(PartsLoaded->GetFileLoaded(),
+  //                                             CaseNbound, tmp, extra_path);
+  //    if(ok){
+  //      boundnorc.CopyFrom(tmp.data(), CaseNbound);
+  //      Log->Print(fun::PrintStr("Loaded BoundNor from extra file: %s", extra_path.c_str()));
+  //    }else if(AbortNoNormals){
+  //      Run_ExceptioonFile("No normal data for mDBC in the input file.",
+  //                         PartsLoaded->GetFileLoaded());
+  //    }else{
+  //      Log->PrintWarning(fun::PrintStr(
+  //        "No normal data for mDBC in the input file (%s) and no BoundNor in extra file.",
+  //        PartsLoaded->GetFileLoaded().c_str()));
+  //    }
+  //  }
+  //}
+  //
 
 
   //-Computes radius of floating bodies.
