@@ -49,7 +49,7 @@ ${gencase} ${name}_Def ${dirout}/${name} -save:all
 if [ $? -ne 0 ] ; then fail; fi
 
 # Executes DualSPHysics to simulate the last 3 seconds.
-${dualsphysicscpu} ${dirout}/${name} ${dirout} -partbegin:1 ${olddiroutdata}
+${dualsphysicscpu} ${dirout}/${name} ${dirout} -partbegin:3 ${olddiroutdata}
 if [ $? -ne 0 ] ; then fail; fi
 
 # Executes post-processing tools for restart simulation...
