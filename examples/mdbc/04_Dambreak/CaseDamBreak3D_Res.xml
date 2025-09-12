@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<case app="GenCase v5.4.354.01 (07-04-2025)" date="15-08-2025 15:05:48">
+<case app="GenCase v5.4.354.01 (07-04-2025)" date="12-09-2025 09:22:38">
     <casedef>
         <constantsdef>
             <gravity x="0" y="0" z="-9.81" comment="Gravitational acceleration" units_comment="m/s^2" />
@@ -15,7 +15,7 @@
         </constantsdef>
         <mkconfig boundcount="241" fluidcount="9" />
         <geometry>
-            <definition dp="0.015" units_comment="metres (m)">
+            <definition dp="0.03" units_comment="metres (m)">
                 <pointref x="0" y="0" z="0" />
                 <pointmin x="-1" y="-1" z="-1" />
                 <pointmax x="3.3" y="1.1" z="1.1" />
@@ -143,6 +143,7 @@
     </casedef>
     <execution>
         <parameters>
+            <parameter key="SaveExtraParts" value="1-10" comment="ShouldSaveExtraBinarieFilesForExampleBoundNor" />
             <parameter key="SavePosDouble" value="0" comment="Saves particle position using double precision (default=0)" />
             <parameter key="Boundary" value="2" comment="Boundary method 1:DBC, 2:mDBC (default=1)" />
             <parameter key="SlipMode" value="1" comment="Slip mode for mDBC 1:DBC vel=0, 2:No-slip, 3:Free Slip (default=1)" />
@@ -177,18 +178,18 @@
                 <posmax x="default" y="default" z="default + 50%" />
             </simulationdomain>
         </parameters>
-        <particles np="357192" nb="164736" nbf="164736" mkboundfirst="10" mkfluidfirst="1">
+        <particles np="63460" nb="41700" nbf="41700" mkboundfirst="10" mkfluidfirst="1">
             <_summary>
                 <positions units_comment="metres (m)">
-                    <posmin x="-0.03" y="-0.03" z="-0.03" />
-                    <posmax x="3.255" y="1.035" z="1.005" />
+                    <posmin x="-0.06" y="-0.06" z="-0.06" />
+                    <posmax x="3.27" y="1.05" z="0.99" />
                 </positions>
-                <fixed count="164736" id="0-164735" mkcount="2" mkvalues="10-11" />
-                <fluid count="192456" id="164736-357191" mkcount="1" mkvalues="1" />
+                <fixed count="41700" id="0-41699" mkcount="2" mkvalues="10-11" />
+                <fluid count="21760" id="41700-63459" mkcount="1" mkvalues="1" />
             </_summary>
-            <fixed mkbound="0" mk="10" begin="0" count="161484" />
-            <fixed mkbound="1" mk="11" begin="161484" count="3252" />
-            <fluid mkfluid="0" mk="1" begin="164736" count="192456" />
+            <fixed mkbound="0" mk="10" begin="0" count="41028" />
+            <fixed mkbound="1" mk="11" begin="41028" count="672" />
+            <fluid mkfluid="0" mk="1" begin="41700" count="21760" />
         </particles>
         <constants>
             <data2d value="false" />
@@ -196,18 +197,18 @@
             <cflnumber value="0.2" />
             <gamma value="7" />
             <rhop0 value="1000" units_comment="kg/m^3" />
-            <dp value="0.015" units_comment="metres (m)" />
-            <h value="0.03" units_comment="metres (m)" />
-            <b value="294300" units_comment="Pascal (Pa)" />
-            <massbound value="0.003375" units_comment="kg" />
-            <massfluid value="0.003375" units_comment="kg" />
+            <dp value="0.03" units_comment="metres (m)" />
+            <h value="0.06" units_comment="metres (m)" />
+            <b value="269074.28571" units_comment="Pascal (Pa)" />
+            <massbound value="0.027" units_comment="kg" />
+            <massfluid value="0.027" units_comment="kg" />
         </constants>
         <uservars>
             <varnum name="Boxpx1" value="0.66" />
-            <varnum name="Boxpx2" value="0.825" />
+            <varnum name="Boxpx2" value="0.81" />
             <varnum name="Boxpy1" value="0.3" />
-            <varnum name="Boxpy2" value="0.705" />
-            <varnum name="Boxpz2" value="0.165" />
+            <varnum name="Boxpy2" value="0.69" />
+            <varnum name="Boxpz2" value="0.15" />
             <varnum name="DefBoxpx" value="0.66" />
             <varnum name="DefBoxpy" value="0.3" />
             <varnum name="DefBoxsx" value="0.16" />
@@ -219,13 +220,13 @@
             <varnum name="DefTanksx" value="3.22" />
             <varnum name="DefTanksy" value="1" />
             <varnum name="DefTanksz" value="1" />
-            <varnum name="Dpm" value="0.0075" />
+            <varnum name="Dpm" value="0.015" />
             <varnum name="Tankpx1" value="0" />
-            <varnum name="Tankpx2" value="3.225" />
+            <varnum name="Tankpx2" value="3.21" />
             <varnum name="Tankpy1" value="0" />
-            <varnum name="Tankpy2" value="1.005" />
+            <varnum name="Tankpy2" value="0.99" />
             <varnum name="Tankpz1" value="0" />
-            <varnum name="Tankpz2" value="1.005" />
+            <varnum name="Tankpz2" value="0.99" />
             <varnum name="VResId" value="0" />
         </uservars>
         <motion />

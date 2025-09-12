@@ -15,7 +15,7 @@
         </constantsdef>
         <mkconfig boundcount="241" fluidcount="9" />
         <geometry>
-            <definition dp="0.015" units_comment="metres (m)">
+            <definition dp="0.03" units_comment="metres (m)">
                 <pointref x="0" y="0" z="0" />
                 <pointmin x="-1" y="-1" z="-1" />
                 <pointmax x="3.3" y="1.1" z="1.1" />
@@ -143,6 +143,7 @@
     </casedef>
     <execution>
         <parameters>
+	    <parameter key="SaveExtraParts" value = "1-10" comment="ShouldSaveExtraBinarieFilesForExampleBoundNor" />
             <parameter key="SavePosDouble" value="0" comment="Saves particle position using double precision (default=0)" />
             <parameter key="Boundary" value="2" comment="Boundary method 1:DBC, 2:mDBC (default=1)" />
             <parameter key="SlipMode" value="1" comment="Slip mode for mDBC 1:DBC vel=0, 2:No-slip, 3:Free Slip (default=1)" />

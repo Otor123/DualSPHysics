@@ -54,7 +54,7 @@ if [ -e ${dirout} ]; then rm -r ${dirout}; fi
 ${gencase} ${name}_Def ${dirout}/${name} -save:all
 if [ $? -ne 0 ] ; then fail; fi
 
-${dualsphysicscpu} -mdbc ${dirout}/${name} ${dirout} -sv:bin -svextraparts:all
+${dualsphysicscpu} -mdbc ${dirout}/${name} ${dirout} -sv:bin
 if [ $? -ne 0 ] ; then fail; fi
 
 fi
