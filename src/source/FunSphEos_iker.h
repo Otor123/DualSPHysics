@@ -42,9 +42,19 @@ __device__ float ComputePressMonaghanCte(float rho){
 /// Returns pressure starting from density using equation of state 
 /// based on [Monaghan, 1994].
 //------------------------------------------------------------------------------
-__device__ float ComputePressMonaghan(float rho,float rho0,float b,float gamma){ 
-  return(b*(pow(rho/rho0,gamma)-1.0f));
+
+//Scheuerlein AddToDo Old
+//__device__ float ComputePressMonaghan(float rho,float rho0,float b,float gamma){ 
+//  return(b*(pow(rho/rho0,gamma)-1.0f));
+//}
+//Scheuerlein AddToDo Old
+
+//Scheuerlein AddToDo new
+__device__ float ComputePressMonaghan(float rho,float rho0,float b,float gamma, float cs0){ 
+  return((b*(pow(rho/rho0,gamma)-1.0f)));
 }
+//Scheuerlein AddToDo new
+
 
 
 //##############################################################################
@@ -63,6 +73,7 @@ __device__ float ComputePressCte(float rho){
 //------------------------------------------------------------------------------
 __device__ float ComputePress(float rho,float rho0,float b,float gamma,float cs0){ 
   return(ComputePressMonaghan(rho,rho0,b,gamma));
+  //Scheuerlein Added cso to (rho, rho0, b, gamma, cs0)
 }
 
 

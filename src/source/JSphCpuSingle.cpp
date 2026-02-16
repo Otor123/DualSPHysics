@@ -894,20 +894,34 @@ double JSphCpuSingle::ComputeStep_Ver(){
 /// Realiza interaccion y actualizacion de particulas segun las fuerzas 
 /// calculadas en la interaccion usando Symplectic.
 //==============================================================================
+
+
+
 double JSphCpuSingle::ComputeStep_Sym(){
   const double dt=SymplecticDtPre;
   if(CaseNmoving)CalcMotion(dt);          //-Calculate motion for moving bodies.
   //-Predictor
   //-----------
+   //Scheuerlein 08.12.25
+  int p_debug = ((int)Npb);   // erstes Fluidpartikel
+  //DebugParticleState("START", p_debug);
+   //Scheuerlein 08.12.25
+  
   InterStep=INTERSTEP_SymPredictor;
   DemDtForce=dt*0.5f;
   MdbcBoundCorrection(InterStep);         //-mDBC correction
   PreInteraction_Forces(InterStep);       //-Allocating temporary arrays.
   PreLoopProcedure(InterStep);            //-Pre-calculation for advanced shifting and other formulations. //<vs_advshift>
   Interaction_Forces(InterStep);          //-Interaction.
+  //Scheuerlein
+  //DebugParticleState("AFTER Interaction (Pred)", 10);
+  //Scheuerlein
   const double dt_p=DtVariable(false);    //-Calculate dt of predictor step.
   if(Shifting)RunShifting(dt*.5);         //-Standard shifting.
   ComputeSymplecticPre(dt);               //-Apply Symplectic-Predictor to particles (periodic particles become invalid).
+  //Scheuerlein
+  //DebugParticleState("After SymplecticPre", 10);
+  //Scheuerlein  
   if(CaseNfloat)RunFloating(dt*.5,true);  //-Control of floating bodies.
   PosInteraction_Forces();                //-Free memory used for interaction.
   //-Corrector
@@ -920,15 +934,35 @@ double JSphCpuSingle::ComputeStep_Sym(){
   PreInteraction_Forces(InterStep);       //-Allocating temporary arrays.
   PreLoopProcedure(InterStep);            //-Pre-calculation for advanced shifting and other formulations. //<vs_advshift>
   Interaction_Forces(InterStep);          //-Interaction.
+  //Scheuerlein
+  //DebugParticleState("After Interaction (Cor)", 10);
+  //Scheuerlein
   const double dt_c=DtVariable(true);     //-Calculate dt of corrector step.
   if(Shifting)RunShifting(dt);            //-Standard shifting.
   ComputeSymplecticCorr(dt);              //-Apply Symplectic-Corrector to particles (periodic particles become invalid).
+  //Scheuerlein
+  //DebugParticleState("After SymplecticCor", 10);
+  //Scheuerlein  
+  
   if(CaseNfloat)RunFloating(dt,false);    //-Control of floating bodies.
   PosInteraction_Forces();                //-Free memory used for interaction.
   if(Damping)RunDamping(dt);              //-Applies Damping.
   if(RelaxZones)RunRelaxZone(dt);         //-Generate waves using RZ.
   SymplecticDtPre=min(dt_p,dt_c);         //-Calculate dt for next ComputeStep.
   return(dt);
+}
+
+ //Scheuerlein 08.12.25
+void JSphCpuSingle::DebugParticleState(const char* label, int p)
+{
+  auto pos  = Pos_c->cptr();
+  auto velr = Velrho_c->cptr();
+  auto ace  = Ace_c->cptr();
+  std::cout << label << " p=" << p
+            << "  x=(" << pos[p].x << "," << pos[p].y << "," << pos[p].z << ")"
+            << "  v=(" << velr[p].x << "," << velr[p].y << "," << velr[p].z << ")"
+            << "  rho=" << velr[p].w
+            << std::endl;
 }
 
 //==============================================================================

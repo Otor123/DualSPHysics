@@ -36,7 +36,9 @@ namespace fsph{
 /// based on [Monaghan, 1994].
 //==============================================================================
 inline float ComputePressMonaghan(float rho,float rho0,float b,float gamma){ 
-  return(b*(pow(rho/rho0,gamma)-1.0f));
+  //Scheuerlein Added cso to ComputePressMonaghan(float rho,float rho0,float b,float gamma, float cs0)
+  return((b*(pow(rho/rho0,gamma)-1.0f)));
+  //Scheuerlein Added cso to (rho, rho0, b, gamma, cs0)
 }
 //==============================================================================
 /// Returns pressure starting from density using equation of state 
@@ -44,6 +46,7 @@ inline float ComputePressMonaghan(float rho,float rho0,float b,float gamma){
 //==============================================================================
 inline float ComputePressMonaghan(float rho,const StCteSph& csp){
   return(ComputePressMonaghan(rho,csp.rhopzero,csp.cteb,csp.gamma));
+  //Scheuerlein Added cso to (rho,csp.rhopzero,csp.cteb,csp.gamma,csp.cs0
 }
 
 
@@ -55,6 +58,7 @@ inline float ComputePressMonaghan(float rho,const StCteSph& csp){
 //------------------------------------------------------------------------------
 inline float ComputePress(float rho,float rho0,float b,float gamma,float cs0){ 
   return(ComputePressMonaghan(rho,rho0,b,gamma));
+  //Scheuerlein Added cso to (rho, rho0, b, gamma, cs0)
 }
 
 //------------------------------------------------------------------------------

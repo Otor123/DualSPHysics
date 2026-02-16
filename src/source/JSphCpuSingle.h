@@ -37,6 +37,9 @@ class JSphCpuSingle : public JSphCpu
 protected:
   JCellDivCpuSingle* CellDivSingle;
 
+  //Scheuerlein 08.12.25
+  void DebugParticleState(const char* label, int p);
+
   llong GetAllocMemoryCpu()const;
   void UpdateMaxValues();
   void LoadConfig(const JSphCfgRun* cfg);
