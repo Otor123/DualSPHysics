@@ -438,6 +438,21 @@ protected:
   bool SaveFtAce;    ///<Indicates whether linear and angular accelerations of each floating objects are saved.
   void SaveFtAceFun(double dt,bool predictor,const StFloatingData* ftobjs);
 
+  //Scheuerlein
+  //==================================================
+  // Temperature configuration variables
+  //==================================================
+  bool HeatTransfer; ///< Enable heat transfer
+  float HeatCpFluid; ///< Specific heat capacity of fluidparticles
+  float HeatCpBound; ///< Specific heat capacity of boundaryparticles
+  float HeatKFluid; ///< Thermal conductivity of fluidparticles
+  float HeatKBound; ///< Thermal conductivity of boundaryparticles
+  float HeatTempBound; ///< Temperature of boundary particles K
+  float HeatTempFluid; ///< Temperature of fluid particles K
+  float DensityBound; ///< Density of boundary particles Kg/m^3
+  unsigned MkConstTempWall; ///< Mk of the constant temperaturewall boundary
+  //==================================================
+
 
 protected:
   void AllocMemoryFloating(unsigned ftcount,bool imposedvel=false,bool addedforce=false);
@@ -510,7 +525,7 @@ protected:
   void ConfigSaveData(unsigned piece,unsigned pieces,std::string div
     ,unsigned np,const tdouble3* pos,const unsigned* idp);
   void AddParticlesOut(unsigned nout,const unsigned* idp,const tdouble3* pos
-    ,const tfloat3* vel,const float* rho,const typecode* code);
+  ,const tfloat3* vel,const float* rho, const double* temp,const typecode* code);
   void AbortBoundOut(JLog2* log,unsigned nout,const unsigned* idp
     ,const tdouble3* pos,const tfloat3* vel,const float* rho
     ,const typecode* code);
@@ -522,7 +537,7 @@ protected:
 
   tfloat3* GetPointerDataFloat3(unsigned n,const tdouble3* v)const;
   void AddBasicArrays(JDataArrays& arrays,unsigned np,const tdouble3* pos
-    ,const unsigned* idp,const tfloat3* vel,const float* rho)const;
+    ,const unsigned* idp,const tfloat3* vel,const float* rho, const double* temp)const;
   void SaveRunPartsCsv(const StInfoPartPlus& infoplus,double tpart,double tsim)const;
   void SaveRunPartsCsvFinal()const;
   void SavePartData(unsigned npsave,unsigned nout,const JDataArrays& arrays

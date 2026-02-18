@@ -130,6 +130,7 @@ void JCellDivCpu::SetMemoryVSort(byte* vsort){
   VSortFloat=(float*)VSort;    VSortFloat3=(tfloat3*)VSort;
   VSortFloat4=(tfloat4*)VSort; VSortDouble3=(tdouble3*)VSort;
   VSortSymmatrix3f=(tsymatrix3f*)VSort;
+  VSortDouble=(double*)VSort;
 }
 
 //==============================================================================
@@ -468,6 +469,46 @@ void JCellDivCpu::SortArray(tsymatrix3f* vec){
   #endif
   for(int p=ini;p<n;p++)VSortSymmatrix3f[p]=vec[SortPart[p]];
   memcpy(vec+ini,VSortSymmatrix3f+ini,sizeof(tsymatrix3f)*(n-ini));
+}
+
+//==============================================================================
+/// Reorder values of all particles (for type double). //SCHEUERLEIN TEMPERATUR
+//==============================================================================
+
+void JCellDivCpu::SortArray(double* vec){
+  const int n=int(Nptot);
+  const int ini=(DivideFull? 0: int(NpbFinal));
+  #ifdef OMP_USE
+    #pragma omp parallel for schedule(static) if(n>OMP_LIMIT_COMPUTELIGHT)
+  #endif
+
+
+
+  for(int p=ini; p<n; p++) VSortDouble[p] = vec[ SortPart[p] ];
+  memcpy(vec+ini, VSortDouble+ini, sizeof(double)*(n-ini));
+
+
+ // printf("Temp before: %g %g %g | SortPart[ini]=%u\n",
+ // vec[0], vec[0+1], vec[0+2], SortPart[0]);
+ // printf("Temp before: %g %g %g | SortPart[ini]=%u\n",
+ // vec[300], vec[300+1], vec[300+2], SortPart[300]);
+ // printf("Temp before: %g %g %g | SortPart[ini]=%u\n",
+ // vec[301], vec[301+1], vec[301+2], SortPart[301]);
+ // printf("Temp before: %g %g %g | SortPart[ini]=%u\n",
+ // vec[6900], vec[6900+1], vec[6900+2], SortPart[6900]);  // SortArray(vec)
+ // printf("Temp before: %g %g %g | SortPart[ini]=%u\n",
+ // vec[7230], vec[7230+1], vec[7230+2], SortPart[7230]);  // SortArray(vec)
+//
+ // printf("Temp after : %g %g %g\n",
+ // vec[0], vec[0+1], vec[0+2]);
+ // printf("Temp after : %g %g %g\n",
+ // vec[300], vec[300+1], vec[300+2]);
+ // printf("Temp after : %g %g %g\n",
+ // vec[301], vec[301+1], vec[301+2]);
+ // printf("Temp after : %g %g %g\n",
+ // vec[6900], vec[6900+1], vec[6900+2]);
+ //  printf("Temp after : %g %g %g\n",
+ // vec[7230], vec[7230+1], vec[7230+2]); 
 }
 
 //==============================================================================

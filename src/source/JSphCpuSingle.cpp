@@ -138,6 +138,36 @@ void JSphCpuSingle::ConfigDomain(){
       ,PartsLoaded->GetFileLoaded().c_str()));
   }
 
+
+    
+  //==================================================
+  // [Temperature]: assign initial temperature
+  //==================================================
+
+
+  double* temp = Tempc->ptr();  
+  for (unsigned p = 0; p<Np; p++) {
+    temp[p] = double(HeatTempFluid);
+  }
+  for (unsigned c = 0; c<MkInfo->Size(); c++) {
+    const JSphMkBlock* block = MkInfo->Mkblock(c);
+    if (block->Mk == (MkConstTempWall + MkInfo->GetMkBoundFirst())) {
+    for (unsigned p = block->Begin; p<block->Begin + block->Count; p++)
+        temp[p] = double(HeatTempBound);
+    }
+  }
+    //double* temp   = Tempc->ptr();
+  //  typecode* code = Code_c->ptr();
+  //
+  //  for(unsigned p=0;p<Np;p++){
+  //    const typecode cod = code[p];
+  //    const bool normalFluid = (CODE_IsNormal(cod) && CODE_IsFluid(cod));
+  //    temp[p] = normalFluid ? double(HeatTempFluid) : double(HeatTempBound);
+  //  }
+
+  //==================================================
+
+
   //-Computes radius of floating bodies.
   if(CaseNfloat && PeriActive!=0 && !PartBegin)
     CalcFloatingRadius(Np,Pos_c->cptr(),Idp_c->cptr());
@@ -526,14 +556,28 @@ void JSphCpuSingle::RunCellDivide(bool updateperiodic){
   CellDivSingle->SortArray(Dcell_c->ptr());
   CellDivSingle->SortArray(Pos_c->ptr());
   CellDivSingle->SortArray(Velrho_c->ptr());
+
+  if(!Tempc || !Tempc->ptr())
+  Run_Exceptioon("Tempc not allocated!");
+  
+  CellDivSingle->SortArray(Tempc->ptr()); // Overloaded function: sort
+  auto id = Idp_c->ptr();
+
+  //Debug Scheuerlein
+  //printf("p=0 id=%u, p=300 id=%u, p=301 id=%u, p=7230 id=%u\n",
+   // id[0], id[300], id[301], id[7230]);
+
+
   if(TStep==STEP_Verlet){
     CellDivSingle->SortArray(VelrhoM1_c->ptr());
+    CellDivSingle->SortArray(TempM1c->ptr());
   }
   else if(TStep==STEP_Symplectic && (PosPre_c->Active() || VelrhoPre_c->Active())){//-In reality, this is only necessary in divide for corrector, not in predictor??? | En realidad solo es necesario en el divide del corrector, no en el predictor???
     if(!PosPre_c->Active() || !VelrhoPre_c->Active())
       Run_Exceptioon("Symplectic data is invalid.") ;
     CellDivSingle->SortArray(PosPre_c->ptr());
     CellDivSingle->SortArray(VelrhoPre_c->ptr());
+    CellDivSingle->SortArray(TempPrec->ptr());
   }
   if(TVisco==VISCO_LaminarSPS){
     CellDivSingle->SortArray(SpsTauRho2_c->ptr());
@@ -597,10 +641,11 @@ void JSphCpuSingle::AbortBoundOut(){
   acdouble3  pos("pos",Arrays_Cpu,true);
   acfloat3   vel("vel",Arrays_Cpu,true);
   acfloat    rho("rho",Arrays_Cpu,true);
+  acdouble   temp("temp",Arrays_Cpu,true);
   actypecode cod("cod",Arrays_Cpu,true);
   unsigned nfilter=0;
   GetParticlesData(nboundout,Np,false,idp.ptr(),pos.ptr()
-    ,vel.ptr(),rho.ptr(),cod.ptr(),NULL,nfilter);
+    ,vel.ptr(),rho.ptr(),temp.ptr(),cod.ptr(),NULL,nfilter);
   //-Shows excluded particles information and aborts execution.
   JSph::AbortBoundOut(Log,nboundout,idp.cptr(),pos.cptr(),vel.cptr()
     ,rho.cptr(),cod.cptr());
@@ -617,13 +662,14 @@ void JSphCpuSingle::SaveFluidOut(){
   acdouble3  pos("pos",Arrays_Cpu,true);
   acfloat3   vel("vel",Arrays_Cpu,true);
   acfloat    rho("rho",Arrays_Cpu,true);
+  acdouble   temp("temp",Arrays_Cpu,true);
   actypecode cod("cod",Arrays_Cpu,true);
   unsigned nfilter=0;
   GetParticlesData(npfout,Np,false,idp.ptr(),pos.ptr()
-    ,vel.ptr(),rho.ptr(),cod.ptr(),NULL,nfilter);
+    ,vel.ptr(),rho.ptr(),temp.ptr(),cod.ptr(),NULL,nfilter);
   //-Stores new excluded particles until recordering next PART.
   AddParticlesOut(npfout,idp.cptr(),pos.cptr(),vel.cptr()
-    ,rho.cptr(),cod.cptr());
+    ,rho.cptr(),temp.cptr(),cod.cptr());
 }
 
 //<vs_advshift_ini>
@@ -689,11 +735,11 @@ void JSphCpuSingle::Interaction_Forces(TpInterStep interstep){
   //-Interaction of Fluid-Fluid/Bound & Bound-Fluid (forces and DEM).
   const stinterparmsc parms=StInterparmsc(Np,Npb,NpbOk
     ,DivData,Dcell_c->cptr()
-    ,Pos_c->cptr(),Velrho_c->cptr(),Idp_c->cptr(),Code_c->cptr(),Press_c->cptr()
+    ,Pos_c->cptr(),Velrho_c->cptr(),Tempc->cptr(),Idp_c->cptr(),Code_c->cptr(),Press_c->cptr()
     ,AC_CPTR(BoundMode_c),AC_CPTR(TangenVel_c),AC_CPTR(MotionVel_c) //<vs_m2dbc>
     ,AC_CPTR(BoundNor_c),AC_PTR(NoPenShift_c) //<vs_m2dbcNP>
     ,dengradcorr
-    ,Ar_c->ptr(),Ace_c->ptr(),AC_PTR(Delta_c)
+    ,Ar_c->ptr(),Ace_c->ptr(),Atempc->ptr(),AC_PTR(Delta_c)
     ,ShiftingMode,AC_PTR(ShiftPosfs_c)
     ,AC_PTR(SpsTauRho2_c),AC_PTR(Sps2Strain_c)
     ,AC_PTR(FSType_c),AC_PTR(ShiftVel_c) //<vs_advshift>
@@ -1283,6 +1329,7 @@ void JSphCpuSingle::SaveData(){
   acdouble3 svpos("svpos",Arrays_Cpu,save);
   acfloat3  svvel("svvel",Arrays_Cpu,save);
   acfloat   svrho("svrho",Arrays_Cpu,save);
+  acdouble  svtemp("svtemp",Arrays_Cpu,save);
   if(save){
     //-Prepare filter for output particles data. //<vs_outpaarts>
     acbyte filter("filter",Arrays_Cpu,false);
@@ -1297,7 +1344,7 @@ void JSphCpuSingle::SaveData(){
     //-Obtain output particles data.
     unsigned npfilterdel=0;
     const unsigned npsel=GetParticlesData(Np,0,PeriActive!=0
-      ,svidp.ptr(),svpos.ptr(),svvel.ptr(),svrho.ptr(),NULL
+      ,svidp.ptr(),svpos.ptr(),svvel.ptr(),svrho.ptr(),svtemp.ptr(),NULL
       ,filter.cptr(),npfilterdel);
     if(npsel+npfilterdel!=npnormal)Run_Exceptioon("The number of particles is invalid.");
     npsave=npsel;
@@ -1327,7 +1374,7 @@ void JSphCpuSingle::SaveData(){
   const tdouble6 vdom=CellDivSingle->GetDomainLimitsMinMax();
   //-Stores particle data. | Graba datos de particulas.
   JDataArrays arrays;
-  AddBasicArrays(arrays,npsave,svpos.cptr(),svidp.cptr(),svvel.cptr(),svrho.cptr());
+  AddBasicArrays(arrays,npsave,svpos.cptr(),svidp.cptr(),svvel.cptr(),svrho.cptr(),svtemp.cptr());
   //-Save data (rho, vel, pos, idp, etc).
   JSph::SaveData(npsave,arrays,1,&vdom,infoplus);
 

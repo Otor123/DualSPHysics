@@ -12,7 +12,9 @@
             
             // "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res","-sv:bin"
         
-             "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_5_FreeCadSmallEample/Posieulle/Posieulle_mDBC_out/Posieulle","-sv:bin"
+            // "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_5_FreeCadSmallEample/Posieulle/Posieulle_mDBC_out/Posieulle","-sv:bin"
+
+            "/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/main/99_Temperature/CaseTemperature_out/CaseTemperature","-sv:bin"
 
             //"/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/04_Dambreak/CaseDamBreak3D_Res", "-sv:bin", "-svextraparts:all"
 

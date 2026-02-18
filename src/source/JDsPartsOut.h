@@ -59,6 +59,7 @@ protected:
   tdouble3* Pos;
   tfloat3*  Vel;
   float*    Rho;
+  double*   Temp;
   byte*     Motive; ///<Motives for exclusion. 1:position, 2:rhop, 3:velocity.
 
   unsigned MemAllocs;     ///<Number of allocations.
@@ -77,7 +78,7 @@ public:
   llong GetAllocMemory()const{ return(MemCpuParticles); }
 
   void AddParticles(unsigned np,const unsigned* idp,const tdouble3* pos
-    ,const tfloat3* vel,const float* rho,const typecode* code);
+    ,const tfloat3* vel,const float* rho,const double* temp,const typecode* code);
 
   unsigned GetSize()const{ return(Size); }
   unsigned GetCount()const{ return(Count); }
@@ -90,6 +91,7 @@ public:
   const tdouble3* GetPosOut(){ return(Pos); }
   const tfloat3*  GetVelOut(){ return(Vel); }
   const float*    GetRhoOut(){ return(Rho); }
+  const double*   GetTempOut(){ return(Temp); }
   const byte*     GetMotiveOut(){ return(Motive); }
 
   void Clear(){
@@ -98,5 +100,3 @@ public:
 };
 
 #endif
-
-

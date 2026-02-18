@@ -307,6 +307,21 @@ void JSph::InitVars(){
   TimePartNext=0;
   LastDt=0;
 
+  // Scheuerlein
+  //==============================
+  // Initialization of Temperature
+  //==============================
+  HeatTransfer = false;
+  HeatCpFluid = 0;
+  HeatCpBound = 0;
+  HeatKFluid = 0;
+  HeatKBound = 0;
+  HeatTempBound = 0;
+  HeatTempFluid = 0;
+  MkConstTempWall = 0;
+  DensityBound = 0;
+  //==============================  
+
   VerletStep=0;
   SymplecticDtPre=0;
   DemDtForce=0;  //(DEM)
@@ -1300,6 +1315,29 @@ void JSph::LoadCaseConfig(const JSphCfgRun* cfg){
   //-Defines NpfMinimum according to CaseNfluid. It is updated later to add initial inlet fluid particles.
   NpfMinimum=unsigned(MinFluidStop*CaseNfluid);
 
+  // Scheuerlein
+  //==================================================
+  // Configuration of Temperature Parameters
+  //==================================================
+  TiXmlNode* tempNode = xml.GetNode("case.execution.special.temperature", false);
+  if (tempNode) {
+  HeatTransfer = true;
+  MkConstTempWall = xml.ReadElementInt(tempNode->ToElement(), "boundary",
+  "mkbound");
+  TiXmlNode* tempBoundNode =
+  xml.GetNode("case.execution.special.temperature.boundary", false);
+  HeatCpBound = xml.ReadElementFloat(tempBoundNode, "HeatCpBound", "value");
+  HeatKBound = xml.ReadElementFloat(tempBoundNode, "HeatKBound", "value");
+  HeatTempBound = xml.ReadElementFloat(tempBoundNode, "HeatTempBound", "value");
+  DensityBound = xml.ReadElementFloat(tempBoundNode, "DensityBound", "value");
+  TiXmlNode* tempFluidNode =
+  xml.GetNode("case.execution.special.temperature.fluid", false);
+  HeatCpFluid = xml.ReadElementFloat(tempFluidNode, "HeatCpFluid", "value");
+  HeatKFluid = xml.ReadElementFloat(tempFluidNode, "HeatKFluid", "value");
+  HeatTempFluid = xml.ReadElementFloat(tempFluidNode, "HeatTempFluid", "value");
+  }
+//==================================================  
+
   Log->Print("**Basic case configuration is loaded");
 }
 
@@ -1550,6 +1588,24 @@ void JSph::ConfigConstants2(){
 /// Prints out configuration of the case.
 //==============================================================================
 void JSph::VisuConfig(){
+
+  // Scheuerlein
+  //==================================================
+  // Temperature: log configuration variables
+  //==================================================
+  Log->Print(fun::VarStr("HeatTransfer", HeatTransfer));
+  if (HeatTransfer) {
+  Log->Print(fun::VarStr("HeatCpFluid", HeatCpFluid));
+  Log->Print(fun::VarStr("HeatCpBound", HeatCpBound));
+  Log->Print(fun::VarStr("HeatKFluid", HeatKFluid));
+  Log->Print(fun::VarStr("HeatKBound", HeatKBound));
+  Log->Print(fun::VarStr("MkConstTempWall", MkConstTempWall));
+  Log->Print(fun::VarStr("HeatTempBound", HeatTempBound));
+  Log->Print(fun::VarStr("HeatTempFluid", HeatTempFluid));
+  Log->Print(fun::VarStr("DensityBound", DensityBound));
+  }
+  //==================================================  
+
   const string sep=" - ";
   Log->Print(Simulate2D? "**2D-Simulation parameters:": "**3D-Simulation parameters:");
   Log->Print(fun::VarStr("CaseName",CaseName));
@@ -1705,6 +1761,7 @@ void JSph::VisuConfig(){
   Log->Print(fun::VarKStr("NpfMinimum",NpfMinimum));
   //-Other configurations. 
   if(CteB==0)Run_Exceptioon("Constant \'b\' cannot be zero.\n\'b\' is zero when fluid height is zero (or fluid particles were not created)");
+
 }
 
 
@@ -2825,9 +2882,9 @@ void JSph::ConfigSaveData(unsigned piece,unsigned pieces,std::string div
 /// Almacena nuevas particulas excluidas hasta la grabacion del proximo PART.
 //==============================================================================
 void JSph::AddParticlesOut(unsigned nout,const unsigned* idp,const tdouble3* pos
-  ,const tfloat3* vel,const float* rho,const typecode* code)
+  ,const tfloat3* vel,const float* rho, const double* temp,const typecode* code)
 {
-  PartsOut->AddParticles(nout,idp,pos,vel,rho,code);
+  PartsOut->AddParticles(nout,idp,pos,vel,rho,temp,code);
 }
 
 //==============================================================================
@@ -2964,12 +3021,13 @@ tfloat3* JSph::GetPointerDataFloat3(unsigned n,const tdouble3* v)const{
 /// Adds basic data arrays in object JDataArrays.
 //==============================================================================
 void JSph::AddBasicArrays(JDataArrays& arrays,unsigned np,const tdouble3* pos
-  ,const unsigned* idp,const tfloat3* vel,const float* rho)const
+  ,const unsigned* idp,const tfloat3* vel,const float* rho, const double* temp)const
 {
   arrays.AddArray("Pos",np,pos);
   arrays.AddArray("Idp",np,idp);
   arrays.AddArray("Vel",np,vel);
   arrays.AddArray("Rho",np,rho);
+  arrays.AddArray("Temp",np,temp);
 }
 
 //==============================================================================

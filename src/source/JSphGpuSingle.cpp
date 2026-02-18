@@ -449,6 +449,9 @@ void JSphGpuSingle::RunCellDivide(bool updateperiodic){
     ,Posz_g->cptr(),Idp_g->cptr(),Timersg);
   DivData=CellDivSingle->GetCellDivData();
 
+  //SCheuerlein
+  CellDivSingle->SortArray(Tempc); // Overloaded function: sort
+
   //-Sorts particle data. | Ordena datos de particulas.
   Timersg->TmStart(TMG_NlSortData,false);
   {
@@ -476,6 +479,7 @@ void JSphGpuSingle::RunCellDivide(bool updateperiodic){
     agfloat4 auxg("-",Arrays_Gpu,true);
     CellDivSingle->SortDataArrays(VelrhoM1_g->cptr(),auxg.ptr());
     VelrhoM1_g->SwapPtr(&auxg);
+    CellDivSingle->SortArray(TempM1c);
   }
   else if(TStep==STEP_Symplectic && (PosxyPre_g->Active() || PoszPre_g->Active() || VelrhoPre_g->Active())){ //-In reality, only necessary in the corrector not the predictor step??? | En realidad solo es necesario en el divide del corrector, no en el predictor??? 
     if(!PosxyPre_g->Active() || !PoszPre_g->Active() || !VelrhoPre_g->Active())
@@ -488,6 +492,7 @@ void JSphGpuSingle::RunCellDivide(bool updateperiodic){
     PosxyPre_g ->SwapPtr(&posxyg);
     PoszPre_g  ->SwapPtr(&poszg);
     VelrhoPre_g->SwapPtr(&velrhog);
+    CellDivSingle->SortArray(TempPrec);
   }
   if(TVisco==VISCO_LaminarSPS){
     agsymatrix3f spstaug("-",Arrays_Gpu,true);
