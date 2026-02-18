@@ -1,0 +1,85 @@
+
+*** These modified files were found in JOE when it aborted on Mon Nov 17 10:23:00 2025
+*** JOE was aborted by UNIX signal 1
+
+*** File '(Unnamed)'
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test/slurm-1196042.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199080.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/run_dpsh_gpu.slurm
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199082.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199090.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199093.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementationV2/DualSPHysics/examples/main/PosieulleFlow/run_dpsh_gpu.slurm
+/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_3_FreeCadPosieulle_X/Poisuelle/PointsVelocity.txt
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
+
+*** These modified files were found in JOE when it aborted on Mon Nov 17 10:26:04 2025
+*** JOE was aborted by UNIX signal 1
+
+*** File '(Unnamed)'
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test/slurm-1196042.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199080.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/run_dpsh_gpu.slurm
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199082.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199090.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199093.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementationV2/DualSPHysics/examples/main/PosieulleFlow/run_dpsh_gpu.slurm
+/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_3_FreeCadPosieulle_X/Poisuelle/PointsVelocity.txt
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
+
+*** These modified files were found in JOE when it aborted on Mon Nov 17 10:27:29 2025
+*** JOE was aborted by UNIX signal 1
+
+*** File '/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_3_FreeCadPosieulle_X/Poisuelle/PointsVelocity.txt'
+OINTS 
+0.0340 0.03 0.02
+0.0335 0.03 0.02
+0.0330 0.03 0.02
+0.0325 0.03 0.02
+0.0320 0.03 0.02
+0.0315 0.03 0.02
+0.0310 0.03 0.02
+0.0305 0.03 0.02
+0.0300 0.03 0.02
+0.0295 0.03 0.02
+0.0290 0.03 0.02
+0.0285 0.03 0.02
+0.0280 0.03 0.02
+0.0275 0.03 0.02
+0.0270 0.03 0.02
+
+
+*** File '(Unnamed)'
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test/slurm-1196042.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199073.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199080.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/run_dpsh_gpu.slurm
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199082.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199090.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementation/DualSPHysics/examples/Warmetauscher/xx_Test_V2/test_v2/slurm-1199093.out
+/run/user/1257/gvfs/sftp:host=tinygpu/home/hpc/iwsp/iwsp110h/Programms/DualSPHysicsImplementationV2/DualSPHysics/examples/main/PosieulleFlow/run_dpsh_gpu.slurm
+/nishome/PaulS/Programms/DualSPHysicsImplementation/DualSPHysics/examples/mdbc/02_3_FreeCadPosieulle_X/Poisuelle/PointsVelocity.txt
+
+*** File '* Startup Log *'
+Processing '/etc/joe/joerc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/joerc
