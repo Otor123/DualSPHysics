@@ -5,12 +5,12 @@ from scipy.special import j0, j1, jn_zeros
 ## ----------------------------------------------------
 ## Eingaben
 ## ----------------------------------------------------
-#dpdx = -0.008#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
-#rho  = 1000.0       # Dichte [kg/m^3]
-#mu   = 1.0    # dyn. Viskosität [Pa·s]
-#nu   = 1.0e-3      # kin. Viskosität [m^2/s]
-#R    = 0.03       # Radius (halbe Breite) [m]
-#t    = 3  # Transiente Zeit [s]
+dpdx = -0.008#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
+rho  = 1000.0       # Dichte [kg/m^3]
+mu   = 1.0    # dyn. Viskosität [Pa·s]
+nu   = 1.0e-3      # kin. Viskosität [m^2/s]
+R    = 0.03       # Radius (halbe Breite) [m]
+t    = 3  # Transiente Zeit [s]
 
 #dpdx = -0.1#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
 #rho  = 1000.0       # Dichte [kg/m^3]
@@ -21,7 +21,7 @@ from scipy.special import j0, j1, jn_zeros
 #
 
 ##Sergio
-##19.12.25 - habe hier nu statt mu bei umax 
+###19.12.25 - habe hier nu statt mu bei umax 
 #dpdx = -1e-4#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
 #rho  = 1000.0       # Dichte [kg/m^3]
 #mu   = 1e-1   # dyn. Viskosität [Pa·s]
@@ -29,24 +29,24 @@ from scipy.special import j0, j1, jn_zeros
 #R    = 0.05      # Radius (halbe Breite) [m]
 #t    = 1.2   # Transiente Zeit [s]
 #
+##
+##BigExample
+###19.12.25 - habe hier nu statt mu bei umax 
+#dpdx = -1e-4#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
+#rho  = 1000.0       # Dichte [kg/m^3]
+#mu   = 1e-1   # dyn. Viskosität [Pa·s]
+#nu   = 1e-4    # kin. Viskosität [m^2/s]
+#R    = 0.05      # Radius (halbe Breite) [m]
+#t    = 1 # Transiente Zeit [s]
 #
-#BigExample
-#19.12.25 - habe hier nu statt mu bei umax 
-dpdx = -1e-4#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
-rho  = 1000.0       # Dichte [kg/m^3]
-mu   = 1e-1   # dyn. Viskosität [Pa·s]
-nu   = 1e-4    # kin. Viskosität [m^2/s]
-R    = 0.05      # Radius (halbe Breite) [m]
-t    = 1 # Transiente Zeit [s]
-
-#BigExample
-#Versuche mit Schallgeschwindigkeit c
-dpdx = -6e-3#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
-rho  = 1000.0       # Dichte [kg/m^3]
-mu   = 1e-1   # dyn. Viskosität [Pa·s]
-nu   = 1e-4    # kin. Viskosität [m^2/s]
-R    = 0.05      # Radius (halbe Breite) [m]
-t    = 10 # Transiente Zeit [s]
+##BigExample
+##Versuche mit Schallgeschwindigkeit c
+#dpdx = -6e-3#-8.0e-3      # Druckgradient [Pa/m] (negativ => Flow in +x)
+#rho  = 1000.0       # Dichte [kg/m^3]
+#mu   = 1e-1   # dyn. Viskosität [Pa·s]
+#nu   = 1e-4    # kin. Viskosität [m^2/s]
+#R    = 0.05      # Radius (halbe Breite) [m]
+#t    = 10 # Transiente Zeit [s]
 # ----------------------------------------------------
 # Hilfsgrößen
 # ----------------------------------------------------

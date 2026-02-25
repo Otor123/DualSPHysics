@@ -9,8 +9,8 @@ Symmetry check + plotting for a 1D profile.
     2) pairwise symmetry error |y_left - y_right|
 
 python ./SymmetrieCheck.py \
-  --csv-out symmetry_smallOneV2__setDRWTrue_full.csv \
-  --csv-pairs-out symmetry_smallOneV2_setDRWTrue_pairs.csv
+  --csv-out symmetry_bigOneV2__setDRWTrue_full.csv \
+  --csv-pairs-out symmetry_bigOneV2_setDRWTrue_pairs.csv
 
 
 Requires: numpy, matplotlib
